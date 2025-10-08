@@ -23,13 +23,3 @@ export default defineConfig(({ mode }) => {
    };
 });
 
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  server: {
-    preview: {
-      port: process.env.PORT ? Number(process.env.PORT) : 4173,
-      allowedHosts: 'all'
-    }
-  }
-});
