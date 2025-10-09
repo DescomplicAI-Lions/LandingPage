@@ -1,10 +1,68 @@
-
 import React from 'react';
+import Slider from 'react-slick';
 import { TEAM_MEMBERS } from '../constants';
 import TeamMemberCard from './TeamMemberCard';
 import type { TeamMember } from '../types';
 
+
+const NextArrow = (props: any) => {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={`${className} custom-arrow next-arrow`}
+      style={{ ...style, display: "block", background: "rgba(0, 0, 0, 0.4)", borderRadius: "50%", padding: "0px", right: "-25px", zIndex: 1 }}
+      onClick={onClick}
+    />
+  );
+};
+
+const PrevArrow = (props: any) => {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={`${className} custom-arrow prev-arrow`}
+      style={{ ...style, display: "block", background: "rgba(0, 0, 0, 0.4)", borderRadius: "50%", padding: "0px", left: "-25px", zIndex: 1 }}
+      onClick={onClick}
+    />
+  );
+};
+
 const Team: React.FC = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true, 
+    autoplaySpeed: 5000, 
+    arrows: true,
+    // Personalizar flechas: 
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+          arrows: true,
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+          arrows: true,
+        }
+      }
+    ]
+  };
+
   return (
     <section id="equipe" className="py-16 sm:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,10 +72,14 @@ const Team: React.FC = () => {
             Os profissionais talentosos por trás da nossa solução inovadora.
           </p>
         </div>
-        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 justify-center">
-          {TEAM_MEMBERS.map((member: TeamMember) => (
-            <TeamMemberCard key={member.name} member={member} />
-          ))}
+        <div className="mt-16">
+          <Slider {...settings}>
+            {TEAM_MEMBERS.map((member: TeamMember) => (
+              <div key={member.name} className="px-2">
+                <TeamMemberCard member={member} />
+              </div>
+            ))}
+          </Slider>
         </div>
       </div>
     </section>

@@ -6,6 +6,8 @@ import ProblemSolution from './components/ProblemSolution';
 import Features from './components/Features';
 import Team from './components/Team';
 import Footer from './components/Footer';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const App: React.FC = () => {
   return (
