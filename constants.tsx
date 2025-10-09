@@ -4,29 +4,54 @@ import type { TeamMember } from './types';
 
 export const TEAM_MEMBERS: TeamMember[] = [
   {
-    name: 'Will',
-    role: 'Product Owner',
-    photoUrl: '/will.jpeg',
+    name: 'Lucas Andrade',
+    role: 'Desenvolvedor Front-End',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png', // Pikachu
   },
   {
-    name: 'Lucas Phelipe Castanho',
-    role: 'Desenvolvedor Front-end',
-    photoUrl: '/Phelipe.jpeg',
+    name: 'Marina Souza',
+    role: 'Gerente de Projeto',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png', // Jigglypuff
   },
   {
-    name: 'Felipe Martins',
-    role: 'Desenvolvedor Back-end',
-    photoUrl: '/Felipe.jpeg',
+    name: 'Felipe Torres',
+    role: 'Desenvolvedor Back-End',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png', // Charizard
   },
   {
-    name: 'Felipe Rodrigues',
-    role: 'Desenvolvedor Front-end',
-    photoUrl: '/FelipeRodrigues.jpeg',
+    name: 'Renata Lima',
+    role: 'UI/UX Designer',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png', // Gengar
   },
   {
-    name: 'Sara Cristina Batista Wendling',
-    role: 'Desenvolvedor Full-stack',
-    photoUrl: '/sah.jpeg',
+    name: 'Eduardo Tavares',
+    role: 'Especialista em IA',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png', // Mewtwo
+  },
+  {
+    name: 'Jéssica Lopes',
+    role: 'Engenheira de Dados',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png', // Snorlax
+  },
+  {
+    name: 'Gabriel Prado',
+    role: 'Analista de Sistemas',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png', // Venusaur
+  },
+  {
+    name: 'Patrícia Fonseca',
+    role: 'Especialista em Marketing',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/18.png', // Pidgeot
+  },
+  {
+    name: 'Vinícius Rocha',
+    role: 'Scrum Master',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/131.png', // Lapras
+  },
+  {
+    name: 'Camila Dias',
+    role: 'QA Tester',
+    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png', // Charmander
   }
 ];
 

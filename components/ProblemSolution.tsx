@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const ProblemSolution: React.FC = () => {
@@ -7,15 +6,15 @@ const ProblemSolution: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="bg-white p-8 rounded-lg shadow-md">
-            <h2 className="text-3xl font-bold text-dark-text mb-4">O Problema</h2>
+            <h2 className="text-3xl font-bold text-dark-text mb-4">Desafios na Gestão Empresarial</h2>
             <p className="text-light-text leading-relaxed">
-              Empresas dos setores alimentícios possuem um problema com a demanda de produtos do estoque, muitas vezes havendo descarte ou falta de alimentos.
+              Empresas de diversos setores enfrentam dificuldades para integrar processos, acessar informações em tempo real e tomar decisões rápidas e seguras. Isso resulta em desperdícios, retrabalho e perda de oportunidades de crescimento.
             </p>
           </div>
           <div className="bg-white p-8 rounded-lg shadow-md border-l-4 border-primary">
-            <h2 className="text-3xl font-bold text-dark-text mb-4">Nossa Solução</h2>
+            <h2 className="text-3xl font-bold text-dark-text mb-4">Solução Inteligente e Integrada</h2>
             <p className="text-light-text leading-relaxed">
-              Nosso produto centraliza todas as informações do projeto em um único lugar. Com uma interface intuitiva, ferramentas de colaboração em tempo real e relatórios automáticos, sua empresa pode focar no que realmente importa: controlar seu estoque e suas finanças com total visibilidade do processo.
+              Nossa plataforma centraliza e automatiza processos, oferecendo dados confiáveis e painéis intuitivos para gestão eficiente. Com tecnologia avançada, você toma decisões estratégicas, reduz custos e potencializa os resultados do seu negócio.
             </p>
           </div>
         </div>
