@@ -27,6 +27,11 @@ export const TEAM_MEMBERS: TeamMember[] = [
     name: 'Eduarda Ferreira',
     role: 'Especialista em Marketing',
     photoUrl: 'https://picsum.photos/seed/eduarda/400/400',
+  },
+  {
+    name:'Wanderlei de Moraes',
+    role:'Desenvolvedor',
+    photoUrl:'https://picsum.photos/seed/wanderlei/400/400'
   }
 ];
 
