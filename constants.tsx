@@ -4,29 +4,44 @@ import type { TeamMember } from './types';
 
 export const TEAM_MEMBERS: TeamMember[] = [
   {
-    name: 'Ana Silva',
+    name: 'Sara Cristina Batista Wendling',
     role: 'Gerente de Projeto',
-    photoUrl: 'https://picsum.photos/seed/ana/400/400',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVL6yjIVxOwKnsIn2UxzY7FCdsgofbxgAGbQ&s',
   },
   {
-    name: 'Bruno Costa',
+    name: 'Lucas Phelipe Castanho Ribeiro',
     role: 'Desenvolvedor Full-Stack',
-    photoUrl: 'https://picsum.photos/seed/bruno/400/400',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcimbMTryfvmCcKCAqW9M-OtjJEAp49ev_0w&s',
   },
   {
-    name: 'Carla Dias',
+    name: 'Samira Batista Wendling',
     role: 'UI/UX Designer',
-    photoUrl: 'https://picsum.photos/seed/carla/400/400',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwmubuksTZ02NpFnsS4LDi9EWZ7YRxcnwfBA&s',
   },
   {
-    name: 'Daniel Martins',
+    name: 'Bruno Scheifer Landuche',
     role: 'Engenheiro de Software',
-    photoUrl: 'https://picsum.photos/seed/daniel/400/400',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS61gW-OH02FTXpGYAG_rhTQFxONILnlyMuyA&s',
   },
   {
-    name: 'Eduarda Ferreira',
-    role: 'Especialista em Marketing',
-    photoUrl: 'https://picsum.photos/seed/eduarda/400/400',
+    name: 'Alderi Cristina Anderes Dzievieski Galvão',
+    role: 'Desenvolvedora',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyvCOHj7C-CZzUaRQxkJMvJEoVihH30W3MmA&s'
+  },
+  {
+    name: 'Wanderlei de Moraes Pego',
+    role: 'Desenvolvedor',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKC-w0iNyb3sKxsMIQb7Q36LNKyqJ52u0_PA&s'
+  },
+  {
+    name: 'Felipe Neves Rodrigues',
+    role: 'Desenvolvedor',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLEV8j3qz9cEl2UgqQ8wonI3tSZlRz20GZ8w&s'
+  },
+  {
+    name: 'Felipe Martins',
+    role: 'Desenvolvedor',
+    photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS07K7ghUdUp_n0z_y91OfscI5Rh6v1O8K4WQ&s'
   }
 ];
 
