@@ -4,29 +4,29 @@ import type { TeamMember } from './types';
 
 export const TEAM_MEMBERS: TeamMember[] = [
   {
-    name: 'Ana Silva',
-    role: 'Gerente de Projeto',
-    photoUrl: 'https://picsum.photos/seed/ana/400/400',
+    name: 'Will',
+    role: 'Product Owner',
+    photoUrl: '/will.jpeg',
   },
   {
-    name: 'Bruno Costa',
-    role: 'Desenvolvedor Full-Stack',
-    photoUrl: 'https://picsum.photos/seed/bruno/400/400',
+    name: 'Lucas Phelipe Castanho',
+    role: 'Desenvolvedor Front-end',
+    photoUrl: '/Phelipe.jpeg',
   },
   {
-    name: 'Carla Dias',
-    role: 'UI/UX Designer',
-    photoUrl: 'https://picsum.photos/seed/carla/400/400',
+    name: 'Felipe Martins',
+    role: 'Desenvolvedor Back-end',
+    photoUrl: '/Felipe.jpeg',
   },
   {
-    name: 'Daniel Martins',
-    role: 'Engenheiro de Software',
-    photoUrl: 'https://picsum.photos/seed/daniel/400/400',
+    name: 'Felipe Rodrigues',
+    role: 'Desenvolvedor Front-end',
+    photoUrl: '/FelipeRodrigues.jpeg',
   },
   {
-    name: 'Eduarda Ferreira',
-    role: 'Especialista em Marketing',
-    photoUrl: 'https://picsum.photos/seed/eduarda/400/400',
+    name: 'Sara Cristina Batista Wendling',
+    role: 'Desenvolvedor Full-stack',
+    photoUrl: '/sah.jpeg',
   }
 ];
 
