@@ -1,24 +1,22 @@
-
 import React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <section className="py-20 md:py-32 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-dark-text tracking-tight">
-          Seu Negócio <span className="text-primary">Descomplicado</span>
-        </h1>
-        <p className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-light-text">
-          Nossa solução transforma a maneira como você gerencia suas tarefas, aumentando a produtividade e simplificando processos complexos.
-        </p>
-        <div className="mt-8">
-          <a
-            href="#features"
-            className="inline-block bg-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-primary-hover transition-all duration-300 transform hover:scale-105"
-          >
-            Saiba Mais
-          </a>
-        </div>
+    <section className="pt-12 pb-16 text-center">
+      <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-dark-text">
+        Transforme a Gestão do Seu Negócio<br />
+        <span className="text-primary">com Inteligência e Simplicidade</span>
+      </h1>
+      <p className="mt-4 text-xl text-light-text max-w-2xl mx-auto">
+        Otimize processos, reduza custos e tome decisões estratégicas com a plataforma inteligente e intuitiva da <span className="font-bold text-primary">DescomplicAI</span>.
+      </p>
+      <div className="mt-8">
+        <a
+          href="#problema"
+          className="inline-block bg-primary text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-primary-dark transition"
+        >
+          Conheça a Solução
+        </a>
       </div>
     </section>
   );
