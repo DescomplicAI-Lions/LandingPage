@@ -24,13 +24,14 @@ const StockControl: React.FC = () => {
             </ul>
           </div>
           <div>
-            {/* Placeholder for an image or a simple UI representation */}
+            {/* Placeholderpara uma imagem simples */}
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
               <h4 className="font-semibold text-dark-text mb-2">Painel de Estoque</h4>
               <div className="bg-gray-100 p-4 rounded-md text-sm text-gray-700">
-                <p><strong>Produto A:</strong> 150 unidades (Estável)</p>
-                <p><strong>Produto B:</strong> 25 unidades (Baixo!)</p>
-                <p><strong>Produto C:</strong> 80 unidades (Estável)</p>
+                <p><strong>Produto A:</strong> 150 unidades (Alto/Excessivo)</p> {/* O estoque está acima do ponto de reposição */}
+                <p><strong>Produto B:</strong> 25 unidades (Mínimo)</p> {/* O estoque está no mínimo aceitável */}
+                <p><strong>Produto C:</strong> 80 unidades (Suficiente)</p> {/* O estoque está na faixa ideal */}
+                <p><strong>Produto D:</strong> 10 unidades (Crítico!)</p> {/* O estoque está abaixo do nível de segurança e precisa de reposição */}
                 <p className="mt-2 text-xs text-gray-500">Última atualização: 5 minutos atrás</p>
               </div>
               <button className="mt-4 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors">
