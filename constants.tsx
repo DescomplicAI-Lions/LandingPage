@@ -4,54 +4,49 @@ import type { TeamMember } from './types';
 
 export const TEAM_MEMBERS: TeamMember[] = [
   {
-    name: 'Lucas Andrade',
+    name: 'Sara Cristina Batista Wendling',
     role: 'Desenvolvedor Front-End',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png', // Pikachu
   },
   {
-    name: 'Marina Souza',
+    name: 'Lucas Phelipe Castanho Ribeiro',
     role: 'Gerente de Projeto',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png', // Jigglypuff
   },
   {
-    name: 'Felipe Torres',
+    name: 'Felipe Martins',
     role: 'Desenvolvedor Back-End',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png', // Charizard
   },
   {
-    name: 'Renata Lima',
+    name: 'Samira Batista Wendling',
     role: 'UI/UX Designer',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png', // Gengar
   },
   {
-    name: 'Eduardo Tavares',
+    name: 'Bruno Scheifer Landuche',
     role: 'Especialista em IA',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png', // Mewtwo
   },
   {
-    name: 'Jéssica Lopes',
+    name: 'Alderi Cristina Anderes Dzievieski',
     role: 'Engenheira de Dados',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png', // Snorlax
   },
   {
-    name: 'Gabriel Prado',
+    name: 'Wanderlei de Moraes Pego',
     role: 'Analista de Sistemas',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png', // Venusaur
   },
   {
-    name: 'Patrícia Fonseca',
+    name: 'Felipe Neves Rodrigues',
     role: 'Especialista em Marketing',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/18.png', // Pidgeot
   },
   {
-    name: 'Vinícius Rocha',
+    name: 'William de Camargo Smolarek',
     role: 'Scrum Master',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/131.png', // Lapras
-  },
-  {
-    name: 'Camila Dias',
-    role: 'QA Tester',
-    photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png', // Charmander
   }
 ];
 
