@@ -12,7 +12,7 @@ const Logo: React.FC = () => {
   // );
    return (
     <div className="flex items-center space-x-2">
-      <img src="../dist/assets/LogoDescomplicAI.png" alt="MeuProjeto Logo" className="h-12 w-auto" />
+      <img src="../src/assets/LogoLonga-500x500.png" alt="MeuProjeto Logo" className="h-12 w-auto" />
       <span className="font-bold text-xl text-dark-text">
         Descom
         <span className="text-primary">plicAI</span> 
