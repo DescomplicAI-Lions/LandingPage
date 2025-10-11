@@ -10,10 +10,13 @@ const Logo: React.FC = () => {
   //     <span className="font-bold text-xl text-dark-text">MeuProjeto</span>
   //   </div>
   // );
-  return (
+   return (
     <div className="flex items-center space-x-2">
-       <img src="/Design_sem_nome_1_-removebg-preview.png" alt="MeuProjeto Logo" className="h-12 w-auto" />
-      <span className="font-bold text-xl text-dark-text">DescomplicAI</span>
+      <img src="../src/assets/LogoLonga-500x500.png" alt="MeuProjeto Logo" className="h-12 w-auto" />
+      <span className="font-bold text-xl text-dark-text">
+        Descom
+        <span className="text-primary">plicAI</span> 
+      </span>
     </div>
   );
 };

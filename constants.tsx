@@ -82,5 +82,14 @@ export const FEATURES = [
         ),
         title: 'Relatórios Detalhados',
         description: 'Gere insights valiosos com nossos relatórios automáticos e personalizáveis para acompanhar o progresso.'
-    }
+    },
+    {
+      icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+          </svg>
+      ),
+      title: 'Controle de Estoque',
+      description: 'Gerencie seu inventário de forma eficiente, acompanhando entradas, saídas e níveis de estoque em tempo real.'
+  }
 ];
