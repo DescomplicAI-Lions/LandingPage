@@ -5,12 +5,12 @@ import type { TeamMember } from './types';
 export const TEAM_MEMBERS: TeamMember[] = [
   {
     name: 'Sara Cristina Batista Wendling',
-    role: 'Desenvolvedor Front-End',
+    role: 'Suporte',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png', // Pikachu
   },
   {
     name: 'Lucas Phelipe Castanho Ribeiro',
-    role: 'Gerente de Projeto',
+    role: 'Desenvolvedor Back-end',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png', // Jigglypuff
   },
   {
@@ -20,32 +20,32 @@ export const TEAM_MEMBERS: TeamMember[] = [
   },
   {
     name: 'Samira Batista Wendling',
-    role: 'UI/UX Designer',
+    role: 'Tester',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png', // Gengar
   },
   {
     name: 'Bruno Scheifer Landuche',
-    role: 'Especialista em IA',
+    role: 'Desenvolvedor Back-end',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png', // Mewtwo
   },
   {
     name: 'Alderi Cristina Anderes Dzievieski',
-    role: 'Engenheira de Dados',
+    role: 'Desenvolvedora Back-end',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png', // Snorlax
   },
   {
     name: 'Wanderlei de Moraes Pego',
-    role: 'Analista de Sistemas',
+    role: 'Desenvolvedor Back-end',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png', // Venusaur
   },
   {
     name: 'Felipe Neves Rodrigues',
-    role: 'Especialista em Marketing',
+    role: 'Desenvolvedor Front-end',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/18.png', // Pidgeot
   },
   {
     name: 'William de Camargo Smolarek',
-    role: 'Scrum Master',
+    role: 'Product Owner',
     photoUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/131.png', // Lapras
   }
 ];
