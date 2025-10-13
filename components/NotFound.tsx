@@ -10,7 +10,7 @@ const NotFound: React.FC = () => {
             </p>
             <Link
             to="/"
-            className="bg-primary text-white px-6 py-3 rouded-xl hover:bg-primary-hover transition"
+            className="inline-block bg-primary text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-primary-dark transition"
             >
                 Voltar para a página inicial
               </Link>
