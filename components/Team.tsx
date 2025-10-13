@@ -4,13 +4,28 @@ import { TEAM_MEMBERS } from '../constants';
 import TeamMemberCard from './TeamMemberCard';
 import type { TeamMember } from '../types';
 
-
 const NextArrow = (props: any) => {
   const { className, style, onClick } = props;
+  const arrowSize = "40px"; 
+  const mobileArrowSize = "30px";
+  const currentSize = window.innerWidth <= 768 ? mobileArrowSize : arrowSize; 
+  const offset = `calc(-${currentSize} / 2 + 10px)`; 
+
   return (
     <div
       className={`${className} custom-arrow next-arrow`}
-      style={{ ...style, display: "block", background: "rgba(0, 0, 0, 0.4)", borderRadius: "50%", padding: "0px", right: "-25px", zIndex: 1 }}
+      style={{
+        ...style,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0, 0, 0, 0.4)",
+        borderRadius: "50%",
+        width: currentSize,
+        height: currentSize,
+        right: offset, 
+        zIndex: 1,
+      }}
       onClick={onClick}
     />
   );
@@ -18,10 +33,26 @@ const NextArrow = (props: any) => {
 
 const PrevArrow = (props: any) => {
   const { className, style, onClick } = props;
+  const arrowSize = "40px"; 
+  const mobileArrowSize = "30px"; 
+  const currentSize = window.innerWidth <= 768 ? mobileArrowSize : arrowSize; 
+  const offset = `calc(-${currentSize} / 2 + 10px)`;
+
   return (
     <div
       className={`${className} custom-arrow prev-arrow`}
-      style={{ ...style, display: "block", background: "rgba(0, 0, 0, 0.4)", borderRadius: "50%", padding: "0px", left: "-25px", zIndex: 1 }}
+      style={{
+        ...style,
+        display: "flex", 
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0, 0, 0, 0.4)",
+        borderRadius: "50%",
+        width: currentSize,
+        height: currentSize,
+        left: offset, 
+        zIndex: 1,
+      }}
       onClick={onClick}
     />
   );
@@ -34,10 +65,9 @@ const Team: React.FC = () => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    autoplay: true, 
-    autoplaySpeed: 5000, 
+    autoplay: true,
+    autoplaySpeed: 5000,
     arrows: true,
-    // Personalizar flechas: 
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
@@ -52,12 +82,22 @@ const Team: React.FC = () => {
         }
       },
       {
-        breakpoint: 600,
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           initialSlide: 1,
-          arrows: true,
+          arrows: true, 
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+          arrows: false, 
+          dots: true,
         }
       }
     ]

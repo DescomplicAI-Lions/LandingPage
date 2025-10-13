@@ -5,10 +5,25 @@ import StockControl from './StockControl';
 
 const NextArrow = (props: any) => {
   const { className, style, onClick } = props;
+  const arrowSize = "40px"; 
+  const mobileArrowSize = "30px"; 
+  const currentSize = typeof window !== 'undefined' && window.innerWidth <= 768 ? mobileArrowSize : arrowSize;
+  const offset = `calc(-${currentSize} / 2 + 10px)`; 
   return (
     <div
       className={`${className} custom-arrow next-arrow`}
-      style={{ ...style, display: "block", background: "rgba(0, 0, 0, 0.4)", borderRadius: "50%", padding: "0px", right: "-25px", zIndex: 1 }}
+      style={{
+        ...style,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0, 0, 0, 0.4)",
+        borderRadius: "50%",
+        width: currentSize,
+        height: currentSize,
+        right: offset, 
+        zIndex: 1,
+      }}
       onClick={onClick}
     />
   );
@@ -16,10 +31,26 @@ const NextArrow = (props: any) => {
 
 const PrevArrow = (props: any) => {
   const { className, style, onClick } = props;
+  const arrowSize = "40px"; 
+  const mobileArrowSize = "30px"; 
+  const currentSize = typeof window !== 'undefined' && window.innerWidth <= 768 ? mobileArrowSize : arrowSize;
+  const offset = `calc(-${currentSize} / 2 + 10px)`;
+
   return (
     <div
       className={`${className} custom-arrow prev-arrow`}
-      style={{ ...style, display: "block", background: "rgba(0, 0, 0, 0.4)", borderRadius: "50%", padding: "0px", left: "-25px", zIndex: 1 }}
+      style={{
+        ...style,
+        display: "flex", 
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0, 0, 0, 0.4)",
+        borderRadius: "50%",
+        width: currentSize,
+        height: currentSize,
+        left: offset, 
+        zIndex: 1,
+      }}
       onClick={onClick}
     />
   );
@@ -46,26 +77,32 @@ const Features: React.FC = () => {
           infinite: true,
           dots: true,
           arrows: true,
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />,
         }
       },
       {
-        breakpoint: 600,
+        breakpoint: 768, 
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           initialSlide: 1,
-          arrows: true,
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />,
+          arrows: true, 
+        }
+      },
+      {
+        breakpoint: 480, 
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+          arrows: false, 
+          dots: true,
         }
       }
     ]
   };
 
   const scrollToExample = (featureTitle: string) => {
-    if (featureTitle === 'Controle de Estoque') {
+    if (typeof window !== 'undefined' && featureTitle === 'Controle de Estoque') { 
       const exampleSection = document.getElementById('stock-control-example');
       if (exampleSection) {
         exampleSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -88,8 +125,8 @@ const Features: React.FC = () => {
               {FEATURES.map((feature, index) => (
                 <div key={index} className="px-2">
                   <div
-                    className="text-center p-6 bg-light-bg rounded-lg h-full flex flex-col justify-between cursor-pointer transition-shadow duration-300 hover:shadow-xl" // Added cursor-pointer and hover effect
-                    onClick={() => scrollToExample(feature.title)} // Add onClick handler
+                    className="text-center p-6 bg-light-bg rounded-lg h-full flex flex-col justify-between cursor-pointer transition-shadow duration-300 hover:shadow-xl"
+                    onClick={() => scrollToExample(feature.title)} 
                   >
                     <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 mx-auto">
                       {feature.icon}
