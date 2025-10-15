@@ -7,6 +7,9 @@ import Features from './components/Features';
 import Team from './components/Team';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound'; 
+import Login from './components/Login';
+import Cadastro from './components/Cadastro';
+import RecuperarSenha from './components/RecuperarSenha';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -25,10 +28,14 @@ const App: React.FC = () => {
                   <ProblemSolution />
                   <Features />
                   <Team />
-                </>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
+                    </>
+                        }
+                     />
+                    <Route path="/login" element={<Login />} />
+                 <Route path="*" element={<NotFound />} />
+               <Route path="/login" element={<Login />} />
+              <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/recuperar-senha" element={<RecuperarSenha />} />
           </Routes>
         </main>
         <Footer />
