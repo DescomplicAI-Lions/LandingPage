@@ -60,7 +60,7 @@ const Header: React.FC = () => {
               <img
                 src={user.avatar || "https://i.pravatar.cc/40"}
                 alt="Avatar do usuário"
-                className="w-10 h-10 rounded-full cursor-pointer border-2 border-primary"
+                className="w-16 h-16 rounded-full cursor-pointer border-2 border-primary"
                 onClick={() => setMenuOpen(!menuOpen)}
               />
 
