@@ -1,0 +1,46 @@
+/* Import Tailwind via CDN como fallback */
+@import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
+
+/* Estilos personalizados */
+.btn-primary {
+  background-color: #3f1142 !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+}
+
+.btn-primary:hover {
+  background-color: #2d0c30 !important;
+}
+
+.btn-outline {
+  border: 2px solid #3f1142 !important;
+  color: #3f1142 !important;
+  background: transparent !important;
+  padding: 10px 22px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+.btn-outline:hover {
+  background-color: #3f1142 !important;
+  color: white !important;
+}
+
+/* Cores personalizadas */
+.text-primary { color: #3f1142 !important; }
+.bg-primary { background-color: #3f1142 !important; }
+.border-primary { border-color: #3f1142 !important; }
+
+.text-secondary { color: #10b981 !important; }
+.bg-secondary { background-color: #10b981 !important; }
+
+.bg-light-bg { background-color: #f3f4f6 !important; }
+.text-dark-text { color: #1f2937 !important; }
+.text-light-text { color: #6b7280 !important; }
