@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const RecuperarSenha: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -13,31 +14,28 @@ const RecuperarSenha: React.FC = () => {
     setError("");
     setSuccess("");
     setLoading(true);
-
-        //Para quando o back estiver pronto
     
-    /*try {
-      const response = await fetch('/api/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+    try {
+      const response = await axios.post('/api/forgot-password', { email });
 
-      if (response.ok) {
-        setSuccess("Se o e-mail estiver cadastrado, um link de recuperação foi enviado.");
-        setEmail("");
-      } else {
-        const data = await response.json();
+      setSuccess("Se o email existir, enviamos instruções para recuperar a senha.");
+      setEmail("");
+
+    } catch (error) {
+
+      if (error.response) {
+
+        const data = error.response.data;
         setError(data.message || "Ocorreu um erro. Por favor, tente novamente.");
+      } else if (error.request) {
+        setError("Não houve resposta do servidor. Por favor, tente novamente.");
+      } else {
+        setError("Não foi possível enviar o pedido de recuperação. Verifique sua conexão.");
       }
 
-    } catch (apiError) {
-      setError("Não foi possível conectar ao servidor. Verifique sua conexão.");
     } finally {
-      setLoading(false); // Desativa o estado de carregamento
-    }*/
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,14 +55,12 @@ const RecuperarSenha: React.FC = () => {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Feedback Visual: Erro */}
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
               <span className="block sm:inline">{error}</span>
             </div>
           )}
           
-          {/* Feedback Visual: Sucesso */}
           {success && (
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
               <span className="block sm:inline">{success}</span>

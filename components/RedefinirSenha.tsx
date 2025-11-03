@@ -1,44 +1,67 @@
 import React, { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import axios from "axios";
 
-const AlterarSenha: React.FC = () => {
-const [newPassword, setNewPassword] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
-const [error, setError] = useState("");
-const [success, setSuccess] = useState("");
-const [searchParams] = useSearchParams()
+const RedefinirSenha: React.FC = () => {
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState("");
+    const [searchParams] = useSearchParams()
 
-const token = searchParams.get('token')
+    const token = searchParams.get('token')
 
-if (!token) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6">
-        <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md border border-gray-100 text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Acesso Negado</h1>
-          <p className="text-gray-600 mb-6">Link de recuperação inválido ou não fornecido. Por favor, solicite um novo link.</p>
-          <Link
-              to="/recuperar-senha"
-              className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-hover transition"
-            >
-              Solicitar Novo Link
-            </Link>
-        </div>
-      </div>
-    );
-  }
+    if (!token) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6">
+                <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md border border-gray-100 text-center">
+                    <h1 className="text-2xl font-bold text-red-600 mb-4">Acesso Negado</h1>
+                    <p className="text-gray-600 mb-6">Link de recuperação inválido ou não fornecido. Por favor, solicite um novo link.</p>
+                    <Link
+                        to="/recuperar-senha"
+                        className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-hover transition"
+                    >
+                        Solicitar Novo Link
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
-const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-     alert(`Senha Alterada`);
-     
-     setError("");
-     setSuccess("");
- 
-     if (newPassword !== confirmPassword) {
-         setError("As senhas não coincidem. Por favor, tente novamente.");
-         return;
-     }
-};
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        alert(`Senha Alterada`);
+
+        setError("");
+        setSuccess("");
+        setLoading(true);
+
+        if (newPassword !== confirmPassword) {
+            setError("As senhas não coincidem. Por favor, tente novamente.");
+            return;
+        }
+
+        try {
+            await axios.post('/api/reset-password', {
+                password: newPassword,
+                token: token
+            });
+
+            setSuccess("Senha alterada com Sucesso.");
+            setNewPassword("");
+            setConfirmPassword("");
+
+        } catch (apiError) {
+            const errorMessage = (apiError as any).response?.data?.message
+                || "Não foi possível conectar ao servidor ou token inválido.";
+
+            setError(errorMessage);
+
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6">
@@ -80,6 +103,7 @@ const handleSubmit = (e: React.FormEvent) => {
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
                             placeholder="Digite a nova Senha"
                             required
+                            disabled={loading}
                         />
                     </div>
                     <div>
@@ -94,6 +118,7 @@ const handleSubmit = (e: React.FormEvent) => {
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
                             placeholder="Digite a nova Senha"
                             required
+                            disabled={loading}
                         />
                     </div>
 
@@ -109,4 +134,4 @@ const handleSubmit = (e: React.FormEvent) => {
     );
 };
 
-export default AlterarSenha;
+export default RedefinirSenha;
