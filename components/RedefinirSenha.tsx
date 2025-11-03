@@ -31,17 +31,17 @@ const RedefinirSenha: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`Senha Alterada`);
 
         setError("");
         setSuccess("");
-        setLoading(true);
-
+        
         if (newPassword !== confirmPassword) {
             setError("As senhas não coincidem. Por favor, tente novamente.");
             return;
         }
-
+        
+        setLoading(true);
+        
         try {
             await axios.post('/api/reset-password', {
                 password: newPassword,
@@ -124,9 +124,10 @@ const RedefinirSenha: React.FC = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-primary text-white py-3 rounded-xl hover:bg-primary-hover transition"
+                        className={`w-full py-3 rounded-xl transition ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-primary-hover text-white'}`}
+                        disabled={loading}
                     >
-                        Enviar link de recuperação
+                        {loading ? 'Alterando Senha...' : 'Alterar Senha'}
                     </button>
                 </form>
             </div>
