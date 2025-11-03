@@ -6,13 +6,13 @@ export const TEAM_MEMBERS: TeamMember[] = [
   {
     name: 'Sara Cristina Batista Wendling',
     role: 'Suporte',
-    photoUrl: '/fotos/will.jpeg',
+    photoUrl: 'dist/fotos/saragamess+.jpg',
     githubUrl: 'https://github.com/SasaCBW'
   },
   {
     name: 'Lucas Phelipe Castanho Ribeiro',
     role: 'Desenvolvedor Back-end',
-    photoUrl: '/fotos/will.jpeg',
+    photoUrl: 'dist/fotos/Lucasgamer.png',
     githubUrl: 'https://github.com/LucasCastanh0'
   },
   {
