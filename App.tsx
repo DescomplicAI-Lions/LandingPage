@@ -10,6 +10,7 @@ import NotFound from './components/NotFound';
 import Login from './components/Login';
 import Cadastro from './components/Cadastro';
 import RecuperarSenha from './components/RecuperarSenha';
+import RedefinirSenha from './components/RedefinirSenha';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -36,6 +37,7 @@ const App: React.FC = () => {
                <Route path="/login" element={<Login />} />
               <Route path="/cadastro" element={<Cadastro />} />
             <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+           <Route path="/redefinir-senha" element={<RedefinirSenha />} />
           </Routes>
         </main>
         <Footer />
