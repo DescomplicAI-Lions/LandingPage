@@ -20,6 +20,6 @@ export default defineConfig(({ mode }) => {
           '@': path.resolve(__dirname, '.'),
         }
       }
+      // Removido css.postcss para evitar conflitos
    };
 });
-
