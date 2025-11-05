@@ -6,49 +6,49 @@ export const TEAM_MEMBERS: TeamMember[] = [
   {
     name: 'Sara Cristina Batista Wendling',
     role: 'Suporte',
-    photoUrl: 'dist/fotos/saragamess+.jpg',
+    photoUrl: 'fotos/saragamess+.jpg',
     githubUrl: 'https://github.com/SasaCBW'
   },
   {
     name: 'Lucas Phelipe Castanho Ribeiro',
     role: 'Desenvolvedor Back-end',
-    photoUrl: 'dist/fotos/Lucasgamer.png',
+    photoUrl: 'fotos/Lucasgamer.png',
     githubUrl: 'https://github.com/LucasCastanh0'
   },
   {
     name: 'Felipe Martins',
     role: 'Desenvolvedor Back-End',
-    photoUrl: 'dist/fotos/FelipeMatias.jpeg',
+    photoUrl: 'fotos/FelipeMatias.jpeg',
     githubUrl: 'https://github.com/AstraSama'
   },
   {
     name: 'Samira Batista Wendling',
     role: 'Tester',
-    photoUrl: 'dist/fotos/SAMIRA.jpg',
+    photoUrl: 'fotos/SAMIRA.jpg',
     githubUrl: 'https://github.com/Samy192'
   },
   {
     name: 'Bruno Scheifer Landuche',
     role: 'Desenvolvedor Back-end',
-    photoUrl: 'dist/fotos/Bruno.jpeg',
+    photoUrl: 'fotos/Bruno.jpeg',
     githubUrl: 'https://github.com/brunoscheifer'
   },
   {
     name: 'Wanderlei de Moraes Pego',
     role: 'Desenvolvedor Back-end',
-    photoUrl: 'dist/fotos/Wanderleiedit.jpeg',
+    photoUrl: 'fotos/Wanderleiedit.jpeg',
     githubUrl: 'https://github.com/Wanderle1'
   },
   {
     name: 'Felipe Neves Rodrigues',
     role: 'Desenvolvedor Front-end',
-    photoUrl: 'dist/fotos/Rodrigo.jpeg',
+    photoUrl: 'fotos/Rodrigo.jpeg',
     githubUrl: 'https://github.com/FelpsImagination'
   },
   {
     name: 'William de Camargo Smolarek',
     role: 'Product Owner',
-    photoUrl: 'dist/fotos/William.jpeg',
+    photoUrl: 'fotos/William.jpeg',
     githubUrl: 'https://github.com/willsmolarek'
   }
 ];
