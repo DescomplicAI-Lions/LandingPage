@@ -1,18 +1,14 @@
-utilizar o render: https://landingpage-oa9e.onrender.com/
-
-# Run and deploy your AI Studio app
-
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1OxN00SwwHamBEE4841kJOpwtu6dgo0b_
-
-## Run Locally
-
-**Prerequisites:**  Node.js
+-- ==============================================
+-- ACESSE PARA ACESSAR NO RENDER
+-- ==============================================
+   - https://landingpage-oa9e.onrender.com/
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+-- ==============================================
+-- PASSO A PASSO LOCAL
+-- ==============================================
+   - atualizar variáveis de ambiente conforme exemplo
+   - rodar scripts:
+      - npm install
+      - npm run build
+      - npm run dev
