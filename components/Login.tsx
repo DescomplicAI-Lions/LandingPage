@@ -1,112 +1,142 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../src/services/firebase.ts';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const existingUser = localStorage.getItem("user");
-    let nome = "";
-
-    if (existingUser) {
-      const parsedUser = JSON.parse(existingUser);
-      if (parsedUser.email === email) {
-        nome = parsedUser.nome;
-      }
+    setLoading(true);
+    
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/');
+    } catch (error) {
+      console.error('Erro no login:', error);
+      alert('Erro ao fazer login. Verifique suas credenciais.');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const randomPokemonId = Math.floor(Math.random() * 151) + 1;
-    const pokemonAvatar = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${randomPokemonId}.png`;
-
-    const userData = {
-      nome: nome || email.split("@")[0],
-      email,
-      avatar: pokemonAvatar,
-    };
-
-    localStorage.setItem("user", JSON.stringify(userData));
-
-    window.dispatchEvent(new Event("userLoginUpdate"));
-
-    alert(`Bem-vindo, ${userData.nome}!`);
-    navigate("/");
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      
+      // Salva informações do usuário no localStorage
+      localStorage.setItem('user', JSON.stringify({
+        nome: user.displayName,
+        email: user.email,
+        avatar: user.photoURL
+      }));
+      
+      // Dispara evento para atualizar o Header
+      window.dispatchEvent(new Event('userLoginUpdate'));
+      
+      navigate('/');
+    } catch (error) {
+      console.error('Erro no login com Google:', error);
+      alert('Erro ao fazer login com Google.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6">
-      <div className="absolute top-6 left-6">
-        <Link
-          to="/"
-          className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-hover transition"
-        >
-          Voltar
-        </Link>
-      </div>
+    <div className="min-h-screen bg-light-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-dark-text">
+            Entre na sua conta
+          </h2>
+        </div>
+        
+        {/* Botão Google */}
+        <div>
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+          >
+            <img 
+              className="h-5 w-5 mr-2" 
+              src="https://www.google.com/favicon.ico" 
+              alt="Google"
+            />
+            {loading ? 'Entrando...' : 'Entrar com Google'}
+          </button>
+        </div>
 
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md border border-gray-100">
-        <h1 className="text-3xl font-bold text-center text-primary mb-8">
-          Entrar na Conta
-        </h1>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-light-bg text-gray-500">Ou</span>
+          </div>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Formulário de email/senha tradicional */}
+        <form className="mt-8 space-y-6" onSubmit={handleEmailLogin}>
           <div>
-            <label className="block text-dark-text mb-2 font-medium">
-              E-mail
-            </label>
+            <label htmlFor="email" className="sr-only">Email</label>
             <input
+              id="email"
+              name="email"
               type="email"
+              required
+              className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+              placeholder="Seu email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-              placeholder="Digite seu e-mail"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="password" className="sr-only">Senha</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
               required
+              className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+              placeholder="Sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block text-dark-text mb-2 font-medium">
-              Senha
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-              placeholder="Digite sua senha"
-              required
-            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+            >
+              {loading ? 'Entrando...' : 'Entrar'}
+            </button>
           </div>
 
-          <div className="flex justify-between items-center">
-            <Link
-              to="/recuperar-senha"
-              className="text-sm text-primary hover:underline"
-            >
-              Esqueci minha senha
+          <div className="text-center">
+            <Link to="/recuperar-senha" className="text-primary hover:text-primary-dark">
+              Esqueceu sua senha?
             </Link>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-3 rounded-xl hover:bg-primary-hover transition"
-          >
-            Entrar
-          </button>
         </form>
 
-        <p className="text-center text-light-text mt-6">
-          Ainda não tem conta?{" "}
-          <Link
-            to="/cadastro"
-            className="text-primary font-medium hover:underline"
-          >
+        <div className="text-center">
+          <span className="text-gray-600">Não tem uma conta? </span>
+          <Link to="/cadastro" className="text-primary hover:text-primary-dark font-medium">
             Cadastre-se
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
