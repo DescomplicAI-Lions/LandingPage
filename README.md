@@ -1,4 +1,4 @@
-utilizar o render: https://render.com/register
+utilizar o render: https://landingpage-oa9e.onrender.com/
 
 # Run and deploy your AI Studio app
 
