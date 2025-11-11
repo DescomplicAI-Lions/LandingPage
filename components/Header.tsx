@@ -5,6 +5,7 @@ import Logo from "./Logo";
 const Header: React.FC = () => {
   const [user, setUser] = useState<{ nome: string; email: string; avatar?: string } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -43,24 +44,35 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           <Logo />
 
+          {/* Menu Mobile Button */}
+          <button 
+            className="md:hidden p-2"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <a href="#problema" className="text-gray-600 hover:text-primary transition-colors duration-200">
+            <a href="#problema" className="text-gray-600 hover:text-primary transition-colors duration-200 text-sm lg:text-base">
               Desafios & Solução
             </a>
-            <a href="#features" className="text-gray-600 hover:text-primary transition-colors duration-200">
+            <a href="#features" className="text-gray-600 hover:text-primary transition-colors duration-200 text-sm lg:text-base">
               Funcionalidades
             </a>
-            <a href="#equipe" className="text-gray-600 hover:text-primary transition-colors duration-200">
+            <a href="#equipe" className="text-gray-600 hover:text-primary transition-colors duration-200 text-sm lg:text-base">
               Equipe
             </a>
           </nav>
 
           {user ? (
-            <div className="relative" ref={menuRef}>
+            <div className="hidden md:block relative" ref={menuRef}>
               <img
                 src={user.avatar || "https://i.pravatar.cc/40"}
                 alt="Avatar do usuário"
-                className="w-16 h-16 rounded-full cursor-pointer border-2 border-primary"
+                className="w-10 h-10 rounded-full cursor-pointer border-2 border-primary"
                 onClick={() => setMenuOpen(!menuOpen)}
               />
 
@@ -92,22 +104,70 @@ const Header: React.FC = () => {
               )}
             </div>
           ) : (
-            <div className="flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-4">
               <Link
                 to="/login"
-                className="bg-primary text-white px-5 py-2 rounded-xl hover:bg-primary-hover transition"
+                className="bg-primary text-white px-4 py-2 md:px-5 md:py-2 rounded-xl hover:bg-primary-hover transition text-sm md:text-base"
               >
                 Entrar
               </Link>
               <Link
                 to="/cadastro"
-                className="border border-primary text-primary px-5 py-2 rounded-xl hover:bg-primary hover:text-white transition"
+                className="border border-primary text-primary px-4 py-2 md:px-5 md:py-2 rounded-xl hover:bg-primary hover:text-white transition text-sm md:text-base"
               >
                 Cadastrar-se
               </Link>
             </div>
           )}
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <nav className="flex flex-col space-y-4">
+              <a href="#problema" className="text-gray-600 hover:text-primary transition-colors duration-200">
+                Desafios & Solução
+              </a>
+              <a href="#features" className="text-gray-600 hover:text-primary transition-colors duration-200">
+                Funcionalidades
+              </a>
+              <a href="#equipe" className="text-gray-600 hover:text-primary transition-colors duration-200">
+                Equipe
+              </a>
+              
+              {user ? (
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <img
+                      src={user.avatar || "https://i.pravatar.cc/40"}
+                      alt="Avatar"
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="font-medium text-gray-800">{user.nome}</span>
+                  </div>
+                  <Link to="/minha-conta" className="block py-2 text-gray-700">Minha Conta</Link>
+                  <Link to="/configuracoes" className="block py-2 text-gray-700">Configurações</Link>
+                  <button onClick={handleLogout} className="block py-2 text-red-600">Sair</button>
+                </div>
+              ) : (
+                <div className="pt-4 border-t border-gray-200 flex flex-col space-y-3">
+                  <Link
+                    to="/login"
+                    className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-hover transition text-center"
+                  >
+                    Entrar
+                  </Link>
+                  <Link
+                    to="/cadastro"
+                    className="border border-primary text-primary px-4 py-2 rounded-xl hover:bg-primary hover:text-white transition text-center"
+                  >
+                    Cadastrar-se
+                  </Link>
+                </div>
+              )}
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
