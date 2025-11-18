@@ -1,170 +1,151 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Logo from "./Logo";
+import { useState, useCallback } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
-const Header: React.FC = () => {
-  const [user, setUser] = useState<{ nome: string; email: string; avatar?: string } | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/cadastro' || location.pathname === '/recuperar-senha';
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+  // Scroll suave com offset para o header
+  const scrollToSection = useCallback((sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerHeight = 80; // Altura do header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 
-    const handleUserUpdate = () => {
-      const updatedUser = localStorage.getItem("user");
-      setUser(updatedUser ? JSON.parse(updatedUser) : null);
-    };
-
-    window.addEventListener("userLoginUpdate", handleUserUpdate);
-    return () => window.removeEventListener("userLoginUpdate", handleUserUpdate);
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/");
+  const handleNavClick = (sectionId: string) => {
+    if (location.pathname !== '/') {
+      // Se não está na página inicial, vai para a página inicial primeiro
+      window.location.href = `/#${sectionId}`;
+    } else {
+      // Se já está na página inicial, faz scroll suave
+      scrollToSection(sectionId);
+    }
+    setIsMenuOpen(false);
   };
 
   return (
-    <header className="bg-white sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Logo />
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex justify-between items-center">
+          {/* Logo + Texto */}
+          <Link to="/" className="text-2xl font-bold text-primary flex items-center">
+            <img 
+              src="/src/assets/Logo-500x500.png" 
+              alt="DescomplicAI" 
+              className="h-8 w-8 mr-2"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            DescomplicAI
+          </Link>
+
+          {/* Menu Desktop - Centralizado */}
+          <nav className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+            {!isAuthPage && (
+              <>
+                <button 
+                  onClick={() => handleNavClick('problema-solucao')}
+                  className="text-gray-700 hover:text-primary transition duration-300"
+                >
+                  Desafios & Solução
+                </button>
+                <button 
+                  onClick={() => handleNavClick('funcionalidades')}
+                  className="text-gray-700 hover:text-primary transition duration-300"
+                >
+                  Funcionalidades
+                </button>
+                <button 
+                  onClick={() => handleNavClick('equipe')}
+                  className="text-gray-700 hover:text-primary transition duration-300"
+                >
+                  Equipe
+                </button>
+              </>
+            )}
+          </nav>
+
+          {/* Botões Login/Cadastro - À direita */}
+          <nav className="hidden md:flex items-center space-x-4">
+            <Link 
+              to="/login" 
+              className="text-gray-700 hover:text-primary transition duration-300"
+            >
+              Login
+            </Link>
+            <Link 
+              to="/cadastro" 
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition duration-300"
+            >
+              Cadastro
+            </Link>
+          </nav>
 
           {/* Menu Mobile Button */}
           <button 
-            className="md:hidden p-2"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-gray-700 focus:outline-none"
+            onClick={toggleMenu}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
           </button>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <a href="#problema" className="text-gray-600 hover:text-primary transition-colors duration-200 text-sm lg:text-base">
-              Desafios & Solução
-            </a>
-            <a href="#features" className="text-gray-600 hover:text-primary transition-colors duration-200 text-sm lg:text-base">
-              Funcionalidades
-            </a>
-            <a href="#equipe" className="text-gray-600 hover:text-primary transition-colors duration-200 text-sm lg:text-base">
-              Equipe
-            </a>
-          </nav>
-
-          {user ? (
-            <div className="hidden md:block relative" ref={menuRef}>
-              <img
-                src={user.avatar || "https://i.pravatar.cc/40"}
-                alt="Avatar do usuário"
-                className="w-10 h-10 rounded-full cursor-pointer border-2 border-primary"
-                onClick={() => setMenuOpen(!menuOpen)}
-              />
-
-              {menuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg py-2">
-                  <div className="px-4 py-3 border-b border-gray-200">
-                    <p className="font-semibold text-gray-800 truncate">{user.nome}</p>
-                  </div>
-
-                  <Link
-                    to="/minha-conta"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Minha Conta
-                  </Link>
-                  <Link
-                    to="/configuracoes"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Configurações
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
-                  >
-                    Sair
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="hidden md:flex items-center space-x-4">
-              <Link
-                to="/login"
-                className="bg-primary text-white px-4 py-2 md:px-5 md:py-2 rounded-xl hover:bg-primary-hover transition text-sm md:text-base"
-              >
-                Entrar
-              </Link>
-              <Link
-                to="/cadastro"
-                className="border border-primary text-primary px-4 py-2 md:px-5 md:py-2 rounded-xl hover:bg-primary hover:text-white transition text-sm md:text-base"
-              >
-                Cadastrar-se
-              </Link>
-            </div>
-          )}
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+        {/* Menu Mobile */}
+        {isMenuOpen && (
+          <div className="md:hidden mt-4 bg-white p-4 rounded-lg shadow-lg">
             <nav className="flex flex-col space-y-4">
-              <a href="#problema" className="text-gray-600 hover:text-primary transition-colors duration-200">
-                Desafios & Solução
-              </a>
-              <a href="#features" className="text-gray-600 hover:text-primary transition-colors duration-200">
-                Funcionalidades
-              </a>
-              <a href="#equipe" className="text-gray-600 hover:text-primary transition-colors duration-200">
-                Equipe
-              </a>
-              
-              {user ? (
-                <div className="pt-4 border-t border-gray-200">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <img
-                      src={user.avatar || "https://i.pravatar.cc/40"}
-                      alt="Avatar"
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <span className="font-medium text-gray-800">{user.nome}</span>
-                  </div>
-                  <Link to="/minha-conta" className="block py-2 text-gray-700">Minha Conta</Link>
-                  <Link to="/configuracoes" className="block py-2 text-gray-700">Configurações</Link>
-                  <button onClick={handleLogout} className="block py-2 text-red-600">Sair</button>
-                </div>
-              ) : (
-                <div className="pt-4 border-t border-gray-200 flex flex-col space-y-3">
-                  <Link
-                    to="/login"
-                    className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-hover transition text-center"
+              {!isAuthPage && (
+                <>
+                  <button 
+                    onClick={() => handleNavClick('problema-solucao')}
+                    className="text-gray-700 hover:text-primary transition duration-300 text-left"
                   >
-                    Entrar
-                  </Link>
-                  <Link
-                    to="/cadastro"
-                    className="border border-primary text-primary px-4 py-2 rounded-xl hover:bg-primary hover:text-white transition text-center"
+                    Desafios & Solução
+                  </button>
+                  <button 
+                    onClick={() => handleNavClick('funcionalidades')}
+                    className="text-gray-700 hover:text-primary transition duration-300 text-left"
                   >
-                    Cadastrar-se
-                  </Link>
-                </div>
+                    Funcionalidades
+                  </button>
+                  <button 
+                    onClick={() => handleNavClick('equipe')}
+                    className="text-gray-700 hover:text-primary transition duration-300 text-left"
+                  >
+                    Equipe
+                  </button>
+                </>
               )}
+              
+              <Link 
+                to="/login" 
+                className="text-gray-700 hover:text-primary transition duration-300"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Login
+              </Link>
+              <Link 
+                to="/cadastro" 
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition duration-300 text-center"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Cadastro
+              </Link>
             </nav>
           </div>
         )}
