@@ -1,11 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FaBars, FaTimes, FaUser, FaChevronDown } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaChevronDown, FaSignOutAlt } from 'react-icons/fa';
 import { useMenuManagement } from './useMenuManagement';
+import { useAuth } from './useAuth';
 
 const Header = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/cadastro' || location.pathname === '/recuperar-senha';
+  const { user, loading, logout } = useAuth();
 
   // Usar o hook de gerenciamento de menus
   const {
@@ -45,6 +47,30 @@ const Header = () => {
 
   const handleAuthClick = () => {
     closeAllMenus();
+  };
+
+  const handleLogout = () => {
+    logout();
+    closeAllMenus();
+  };
+
+  // Foto de perfil padrão ou do usuário
+  const getProfilePhoto = () => {
+    if (user?.photoURL) {
+      return user.photoURL;
+    }
+    // Foto padrão ou ícone
+    return null;
+  };
+
+  const getUserInitial = () => {
+    if (user?.displayName) {
+      return user.displayName.charAt(0).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return 'U';
   };
 
   return (
@@ -92,38 +118,93 @@ const Header = () => {
             </nav>
           )}
 
-          {/* Botões Login/Cadastro Desktop (APENAS na página inicial) */}
-          {!isAuthPage && (
+          {/* Botões Desktop - Diferentes estados: Logado vs Não logado */}
+          {!isAuthPage && !loading && (
             <nav className="hidden md:flex items-center space-x-4">
-              <div className="relative" ref={userMenuRef}>
-                <button 
-                  onClick={toggleUserMenu}
-                  className="flex items-center space-x-1 text-gray-700 hover:text-primary transition duration-300"
-                >
-                  <FaUser className="text-lg" />
-                  <span>Conta</span>
-                  <FaChevronDown className={`text-xs transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                    <Link 
-                      to="/login" 
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                      onClick={handleAuthClick}
-                    >
-                      Login
-                    </Link>
-                    <Link 
-                      to="/cadastro" 
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                      onClick={handleAuthClick}
-                    >
-                      Cadastro
-                    </Link>
-                  </div>
-                )}
-              </div>
+              {user ? (
+                // USUÁRIO LOGADO - Mostrar foto e menu de perfil
+                <div className="relative" ref={userMenuRef}>
+                  <button 
+                    onClick={toggleUserMenu}
+                    className="flex items-center space-x-2 text-gray-700 hover:text-primary transition duration-300"
+                  >
+                    {getProfilePhoto() ? (
+                      <img 
+                        src={getProfilePhoto()} 
+                        alt="Foto de perfil" 
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">
+                        {getUserInitial()}
+                      </div>
+                    )}
+                    <span className="max-w-32 truncate">
+                      {user.displayName || user.email?.split('@')[0] || 'Usuário'}
+                    </span>
+                    <FaChevronDown className={`text-xs transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {user.displayName || 'Usuário'}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                      <Link 
+                        to="/perfil" 
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                        onClick={handleAuthClick}
+                      >
+                        <FaUser className="mr-2 text-sm" />
+                        Meu Perfil
+                      </Link>
+                      <button 
+                        onClick={handleLogout}
+                        className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                      >
+                        <FaSignOutAlt className="mr-2 text-sm" />
+                        Sair
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // USUÁRIO NÃO LOGADO - Mostrar dropdown de conta
+                <div className="relative" ref={userMenuRef}>
+                  <button 
+                    onClick={toggleUserMenu}
+                    className="flex items-center space-x-1 text-gray-700 hover:text-primary transition duration-300"
+                  >
+                    <FaUser className="text-lg" />
+                    <span>Conta</span>
+                    <FaChevronDown className={`text-xs transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                      <Link 
+                        to="/login" 
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                        onClick={handleAuthClick}
+                      >
+                        Login
+                      </Link>
+                      <Link 
+                        to="/cadastro" 
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                        onClick={handleAuthClick}
+                      >
+                        Cadastro
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </nav>
           )}
 
@@ -167,20 +248,50 @@ const Header = () => {
               </button>
               
               <div className="border-t pt-4">
-                <Link 
-                  to="/login" 
-                  className="block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition duration-300 text-center mb-2"
-                  onClick={handleAuthClick}
-                >
-                  Login
-                </Link>
-                <Link 
-                  to="/cadastro" 
-                  className="block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition duration-300 text-center"
-                  onClick={handleAuthClick}
-                >
-                  Cadastro
-                </Link>
+                {user ? (
+                  // USUÁRIO LOGADO NO MOBILE
+                  <>
+                    <div className="px-2 py-3 border-b border-gray-100 mb-2">
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.displayName || 'Usuário'}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {user.email}
+                      </p>
+                    </div>
+                    <Link 
+                      to="/perfil" 
+                      className="block text-gray-700 hover:text-primary transition duration-300 py-2"
+                      onClick={handleAuthClick}
+                    >
+                      Meu Perfil
+                    </Link>
+                    <button 
+                      onClick={handleLogout}
+                      className="block w-full text-left text-gray-700 hover:text-primary transition duration-300 py-2"
+                    >
+                      Sair
+                    </button>
+                  </>
+                ) : (
+                  // USUÁRIO NÃO LOGADO NO MOBILE
+                  <>
+                    <Link 
+                      to="/login" 
+                      className="block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition duration-300 text-center mb-2"
+                      onClick={handleAuthClick}
+                    >
+                      Login
+                    </Link>
+                    <Link 
+                      to="/cadastro" 
+                      className="block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition duration-300 text-center"
+                      onClick={handleAuthClick}
+                    >
+                      Cadastro
+                    </Link>
+                  </>
+                )}
               </div>
             </nav>
           </div>
