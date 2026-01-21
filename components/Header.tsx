@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 
 const Header: React.FC = () => {
@@ -7,6 +7,7 @@ const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -37,6 +38,20 @@ const Header: React.FC = () => {
     navigate("/");
   };
 
+  // Função para navegar até a seção mesmo vindo de outras páginas
+  const scrollToSection = (sectionId: string) => {
+    if (location.pathname !== "/") {
+      // Se não estiver na home, vai para a home com o hash
+      navigate(`/#${sectionId}`);
+    } else {
+      // Se já estiver na home, apenas rola
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   return (
     <header className="bg-white sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,15 +59,24 @@ const Header: React.FC = () => {
           <Logo />
 
           <nav className="hidden md:flex space-x-8">
-            <a href="#problema" className="text-gray-600 hover:text-primary transition-colors duration-200">
+            <button 
+              onClick={() => scrollToSection("problema")}
+              className="text-gray-600 hover:text-primary transition-colors duration-200"
+            >
               Desafios & Solução
-            </a>
-            <a href="#features" className="text-gray-600 hover:text-primary transition-colors duration-200">
+            </button>
+            <button 
+              onClick={() => scrollToSection("features")}
+              className="text-gray-600 hover:text-primary transition-colors duration-200"
+            >
               Funcionalidades
-            </a>
-            <a href="#equipe" className="text-gray-600 hover:text-primary transition-colors duration-200">
+            </button>
+            <button 
+              onClick={() => scrollToSection("equipe")}
+              className="text-gray-600 hover:text-primary transition-colors duration-200"
+            >
               Equipe
-            </a>
+            </button>
           </nav>
 
           {user ? (
@@ -60,7 +84,7 @@ const Header: React.FC = () => {
               <img
                 src={user.avatar || "https://i.pravatar.cc/40"}
                 alt="Avatar do usuário"
-                className="w-16 h-16 rounded-full cursor-pointer border-2 border-primary"
+                className="w-12 h-12 rounded-full cursor-pointer border-2 border-primary object-cover"
                 onClick={() => setMenuOpen(!menuOpen)}
               />
 
@@ -70,17 +94,19 @@ const Header: React.FC = () => {
                     <p className="font-semibold text-gray-800 truncate">{user.nome}</p>
                   </div>
 
+                  {/* Botão para ir ao Dashboard */}
+                  <button
+                    onClick={() => window.location.href = "http://localhost:3000/login?name=" + encodeURIComponent(user.nome) + "&email=" + user.email}
+                    className="w-full text-left px-4 py-2 text-primary font-bold hover:bg-gray-100"
+                  >
+                    Ir para o Dashboard
+                  </button>
+
                   <Link
                     to="/minha-conta"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >
                     Minha Conta
-                  </Link>
-                  <Link
-                    to="/configuracoes"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Configurações
                   </Link>
                   <button
                     onClick={handleLogout}
