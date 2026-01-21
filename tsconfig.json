@@ -25,6 +25,20 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
-  "include": ["."]
+  "include": [
+    "src",
+    "components",
+    "src/types",
+    "*.ts",
+    "*.tsx",
+    "*.js",
+    "*.jsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
