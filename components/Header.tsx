@@ -1,53 +1,36 @@
-import { useState, useCallback } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { FaBars, FaTimes, FaUser, FaChevronDown, FaSignOutAlt } from 'react-icons/fa';
-import { useMenuManagement } from './useMenuManagement';
-import { useAuth } from './useAuth';
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import Logo from "./Logo";
 
-const Header = () => {
+const Header: React.FC = () => {
+  const [user, setUser] = useState<{ nome: string; email: string; avatar?: string } | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/cadastro' || location.pathname === '/recuperar-senha';
-  const { user, loading, logout } = useAuth();
 
-  // Usar o hook de gerenciamento de menus
-  const {
-    isMobileMenuOpen,
-    isUserMenuOpen,
-    mobileMenuRef,
-    userMenuRef,
-    toggleMobileMenu,
-    toggleUserMenu,
-    closeAllMenus
-  } = useMenuManagement();
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
 
-  // Scroll suave com offset para o header
-  const scrollToSection = useCallback((sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const headerHeight = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+    const handleUserUpdate = () => {
+      const updatedUser = localStorage.getItem("user");
+      setUser(updatedUser ? JSON.parse(updatedUser) : null);
+    };
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-    closeAllMenus();
-  }, [closeAllMenus]);
+    window.addEventListener("userLoginUpdate", handleUserUpdate);
+    return () => window.removeEventListener("userLoginUpdate", handleUserUpdate);
+  }, []);
 
-  const handleNavClick = (sectionId: string) => {
-    if (location.pathname !== '/') {
-      window.location.href = `/#${sectionId}`;
-    } else {
-      scrollToSection(sectionId);
-    }
-    closeAllMenus();
-  };
-
-  const handleAuthClick = () => {
-    closeAllMenus();
-  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -73,112 +56,79 @@ const Header = () => {
     return 'U';
   };
 
+  // Função para navegar até a seção mesmo vindo de outras páginas
+  const scrollToSection = (sectionId: string) => {
+    if (location.pathname !== "/") {
+      // Se não estiver na home, vai para a home com o hash
+      navigate(`/#${sectionId}`);
+    } else {
+      // Se já estiver na home, apenas rola
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="text-2xl font-bold text-primary flex items-center"
-            onClick={closeAllMenus}
-          >
-            <img 
-              src="/src/assets/Logo-500x500.png" 
-              alt="DescomplicAI" 
-              className="h-8 w-8 mr-2"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-            DescomplicAI
-          </Link>
+    <header className="bg-white sticky top-0 z-50 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <Logo />
 
-          {/* Menu Desktop - Centralizado (APENAS na página inicial) */}
-          {!isAuthPage && (
-            <nav className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
-              <button 
-                onClick={() => handleNavClick('problema-solucao')}
-                className="text-gray-700 hover:text-primary transition duration-300"
-              >
-                Desafios & Solução
-              </button>
-              <button 
-                onClick={() => handleNavClick('funcionalidades')}
-                className="text-gray-700 hover:text-primary transition duration-300"
-              >
-                Funcionalidades
-              </button>
-              <button 
-                onClick={() => handleNavClick('equipe')}
-                className="text-gray-700 hover:text-primary transition duration-300"
-              >
-                Equipe
-              </button>
-            </nav>
-          )}
+          <nav className="hidden md:flex space-x-8">
+            <button 
+              onClick={() => scrollToSection("problema")}
+              className="text-gray-600 hover:text-primary transition-colors duration-200"
+            >
+              Desafios & Solução
+            </button>
+            <button 
+              onClick={() => scrollToSection("features")}
+              className="text-gray-600 hover:text-primary transition-colors duration-200"
+            >
+              Funcionalidades
+            </button>
+            <button 
+              onClick={() => scrollToSection("equipe")}
+              className="text-gray-600 hover:text-primary transition-colors duration-200"
+            >
+              Equipe
+            </button>
+          </nav>
 
-          {/* Botões Desktop - Diferentes estados: Logado vs Não logado */}
-          {!isAuthPage && !loading && (
-            <nav className="hidden md:flex items-center space-x-4">
-              {user ? (
-                // USUÁRIO LOGADO - Mostrar foto e menu de perfil
-                <div className="relative" ref={userMenuRef}>
-                  <button 
-                    onClick={toggleUserMenu}
-                    className="flex items-center space-x-2 text-gray-700 hover:text-primary transition duration-300"
+          {user ? (
+            <div className="relative" ref={menuRef}>
+              <img
+                src={user.avatar || "https://i.pravatar.cc/40"}
+                alt="Avatar do usuário"
+                className="w-12 h-12 rounded-full cursor-pointer border-2 border-primary object-cover"
+                onClick={() => setMenuOpen(!menuOpen)}
+              />
+
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg py-2">
+                  <div className="px-4 py-3 border-b border-gray-200">
+                    <p className="font-semibold text-gray-800 truncate">{user.nome}</p>
+                  </div>
+
+                  {/* Botão para ir ao Dashboard */}
+                  <button
+                    onClick={() => window.location.href = "http://localhost:3000/login?name=" + encodeURIComponent(user.nome) + "&email=" + user.email}
+                    className="w-full text-left px-4 py-2 text-primary font-bold hover:bg-gray-100"
                   >
-                    {getProfilePhoto() ? (
-                      <img 
-                        src={getProfilePhoto()} 
-                        alt="Foto de perfil" 
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">
-                        {getUserInitial()}
-                      </div>
-                    )}
-                    <span className="max-w-32 truncate">
-                      {user.displayName || user.email?.split('@')[0] || 'Usuário'}
-                    </span>
-                    <FaChevronDown className={`text-xs transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                    Ir para o Dashboard
                   </button>
-                  
-                  {isUserMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {user.displayName || 'Usuário'}
-                        </p>
-                        <p className="text-xs text-gray-500 truncate">
-                          {user.email}
-                        </p>
-                      </div>
-                      <Link 
-                        to="/perfil" 
-                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                        onClick={handleAuthClick}
-                      >
-                        <FaUser className="mr-2 text-sm" />
-                        Meu Perfil
-                      </Link>
-                      <button 
-                        onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                      >
-                        <FaSignOutAlt className="mr-2 text-sm" />
-                        Sair
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                // USUÁRIO NÃO LOGADO - Mostrar dropdown de conta
-                <div className="relative" ref={userMenuRef}>
-                  <button 
-                    onClick={toggleUserMenu}
-                    className="flex items-center space-x-1 text-gray-700 hover:text-primary transition duration-300"
+
+                  <Link
+                    to="/minha-conta"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Minha Conta
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
                   >
                     <FaUser className="text-lg" />
                     <span>Conta</span>
