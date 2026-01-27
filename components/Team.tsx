@@ -113,13 +113,14 @@ const Team: React.FC = () => {
           </p>
         </div>
         <div className="mt-16">
-          <Slider {...settings}>
+          {/* <Slider {...settings}>
             {TEAM_MEMBERS.map((member: TeamMember) => (
               <div key={member.name} className="px-2">
                 <TeamMemberCard member={member} />
               </div>
             ))}
-          </Slider>
+          </Slider> */}
+          <h1>OOOPSS.... Algo errado não está certo</h1>{/**trolagem do professor - RESOLVA */}
         </div>
       </div>
     </section>
