@@ -23,19 +23,38 @@ export const useAuth = () => {
       const authInstance = await initializeFirebase();
       
       if (authInstance) {
-        const unsubscribe = onAuthStateChanged(authInstance, (user) => {
-          setUser(user);
+        const unsubscribe = onAuthStateChanged(authInstance, async (user) => {
+          if (user) {
+            try {
+              await fetch('http://127.0.0.1:3000/api/auth/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  uid: user.uid,
+                  email: user.email,
+                  name: user.displayName,
+                }),
+              });
+            } catch (err) {
+              console.warn("Offline mode: Database sync skipped or backend unreachable");
+            }
+            // -----------------------------------
+            
+            setUser(user);
+          } else {
+            setUser(null);
+          }
           setLoading(false);
         });
-
+  
         return unsubscribe;
       } else {
         setLoading(false);
       }
     };
-
+  
     const unsubscribePromise = initAuth();
-
+  
     return () => {
       unsubscribePromise.then(unsubscribe => {
         if (unsubscribe) unsubscribe();

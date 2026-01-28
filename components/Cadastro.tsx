@@ -103,70 +103,32 @@ const Cadastro: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setErrors({});
-
-    // Validações finais
-    const newErrors: Record<string, string> = {};
     
-    if (!formData.nome.trim()) newErrors.nome = 'Nome é obrigatório';
-    if (!formData.email.trim()) newErrors.email = 'E-mail é obrigatório';
-    if (!formData.senha) newErrors.senha = 'Senha é obrigatória';
-    if (!formData.dataNascimento) newErrors.dataNascimento = 'Data de nascimento é obrigatória';
-    if (!formData.cpf) newErrors.cpf = 'CPF é obrigatório';
-    
-    if (formData.senha.length < 6) newErrors.senha = 'Senha deve ter pelo menos 6 caracteres';
-    
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setLoading(false);
-      return;
-    }
-
     try {
-      // Inicializar Firebase se necessário
       await initializeFirebase();
-
+  
       if (auth && createUserWithEmailAndPassword) {
-        // Firebase configurado - criar usuário real
+        // 1. Create in Firebase Emulator
         const userCredential = await createUserWithEmailAndPassword(
-          auth, 
-          formData.email, 
-          formData.senha
+          auth, formData.email, formData.senha
         );
         
-        if (updateProfile) {
-          await updateProfile(userCredential.user, {
-            displayName: formData.nome
-          });
-        }
-
-        console.log('Usuário criado no Firebase:', userCredential.user);
-      } else {
-        // Modo demonstração - apenas simular sucesso
-        console.log('Modo demonstração - Dados do formulário:', formData);
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Simular delay
+        await fetch('http://127.0.0.1:8080/api/sync-user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            uid: userCredential.user.uid,
+            email: formData.email,
+            nome: formData.nome,
+            cpf: formData.cpf,
+            dataNascimento: formData.dataNascimento
+          })
+        });
       }
-
       setSuccess(true);
-      
-      // Redirecionar após 2 segundos
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
-
+      setTimeout(() => navigate('/login'), 2000);
     } catch (error: any) {
-      console.error('Erro no cadastro:', error);
-      
-      // Tratamento de erros
-      if (error.code === 'auth/email-already-in-use') {
-        setErrors({ email: 'Este e-mail já está em uso' });
-      } else if (error.code === 'auth/invalid-email') {
-        setErrors({ email: 'E-mail inválido' });
-      } else if (error.code === 'auth/weak-password') {
-        setErrors({ senha: 'Senha muito fraca' });
-      } else {
-        setErrors({ geral: 'Erro ao criar conta. Tente novamente.' });
-      }
+      setErrors({ geral: error.message });
     } finally {
       setLoading(false);
     }
