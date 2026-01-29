@@ -1,52 +1,48 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider } from '../src/services/firebase';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from "./useAuth"
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const DASHBOARD_URL = "http://localhost:3000";
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  // Dentro do componente Login
+
+const handleEmailLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const userData = await login(email, password);
     
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      const user = result.user;
+    // Redireciona para o Dashboard passando os dados via URL (como você já fazia)
+    const userName = encodeURIComponent(userData.nome);
+    const userEmail = encodeURIComponent(userData.email);
+    window.location.href = `http://localhost:3000/login?name=${userName}&email=${userEmail}`;
+  } catch (err: any) {
+    alert(err.message);
+  }
+};
 
-      const userName = encodeURIComponent(user.displayName || 'Usuário');
-      const userEmail = encodeURIComponent(user.email || '');
-
-      window.location.href = `${DASHBOARD_URL}/login?name=${userName}&email=${userEmail}`;
-    } catch (error) {
-      console.error('Erro no login:', error);
-      alert('Erro ao fazer login. Verifique suas credenciais.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
+  // const handleGoogleLogin = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await signInWithPopup(auth, googleProvider);
+  //     const user = result.user;
       
-      const userName = encodeURIComponent(user.displayName || 'Usuário');
-      const userEmail = encodeURIComponent(user.email || '');
+  //     const userName = encodeURIComponent(user.displayName || 'Usuário');
+  //     const userEmail = encodeURIComponent(user.email || '');
 
-      window.location.href = `${DASHBOARD_URL}/login?name=${userName}&email=${userEmail}`;
-    } catch (error) {
-      console.error('Erro no login com Google:', error);
-      alert('Erro ao fazer login com Google.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     window.location.href = `${DASHBOARD_URL}/login?name=${userName}&email=${userEmail}`;
+  //   } catch (error) {
+  //     console.error('Erro no login com Google:', error);
+  //     alert('Erro ao fazer login com Google.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-light-bg flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
@@ -57,7 +53,7 @@ const Login: React.FC = () => {
         
         <div>
           <button
-            onClick={handleGoogleLogin}
+            // onClick={handleGoogleLogin}
             disabled={loading}
             className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-all"
           >

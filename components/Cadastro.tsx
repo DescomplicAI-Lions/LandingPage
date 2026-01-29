@@ -2,24 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
 
-// Import do Firebase - vamos usar importação dinâmica para evitar erro
-let auth: any = null;
-let createUserWithEmailAndPassword: any = null;
-let updateProfile: any = null;
-
-// Função para inicializar o Firebase quando necessário
-const initializeFirebase = async () => {
-  try {
-    const { auth: authModule, createUserWithEmailAndPassword: createUser, updateProfile: updateProfileModule } = await import('firebase/auth');
-    const { auth: authInstance } = await import('../src/services/firebase');
-    auth = authInstance;
-    createUserWithEmailAndPassword = createUser;
-    updateProfile = updateProfileModule;
-  } catch (error) {
-    console.warn('Firebase não configurado. Modo de demonstração ativado.');
-  }
-};
-
 const Cadastro: React.FC = () => {
   const [formData, setFormData] = useState({
     nome: '',
@@ -103,70 +85,31 @@ const Cadastro: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setErrors({});
-
-    // Validações finais
-    const newErrors: Record<string, string> = {};
-    
-    if (!formData.nome.trim()) newErrors.nome = 'Nome é obrigatório';
-    if (!formData.email.trim()) newErrors.email = 'E-mail é obrigatório';
-    if (!formData.senha) newErrors.senha = 'Senha é obrigatória';
-    if (!formData.dataNascimento) newErrors.dataNascimento = 'Data de nascimento é obrigatória';
-    if (!formData.cpf) newErrors.cpf = 'CPF é obrigatório';
-    
-    if (formData.senha.length < 6) newErrors.senha = 'Senha deve ter pelo menos 6 caracteres';
-    
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setLoading(false);
-      return;
-    }
-
+  
+    const [dia, mes, ano] = formData.dataNascimento.split('/');
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+  
+    const payload = {
+      nome: formData.nome,
+      senha: formData.senha,
+      email: formData.email,
+      data_nascimento: dataFormatada,
+      cpf_usuario: formData.cpf
+    };
+  
     try {
-      // Inicializar Firebase se necessário
-      await initializeFirebase();
-
-      if (auth && createUserWithEmailAndPassword) {
-        // Firebase configurado - criar usuário real
-        const userCredential = await createUserWithEmailAndPassword(
-          auth, 
-          formData.email, 
-          formData.senha
-        );
-        
-        if (updateProfile) {
-          await updateProfile(userCredential.user, {
-            displayName: formData.nome
-          });
-        }
-
-        console.log('Usuário criado no Firebase:', userCredential.user);
-      } else {
-        // Modo demonstração - apenas simular sucesso
-        console.log('Modo demonstração - Dados do formulário:', formData);
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Simular delay
-      }
-
+      const response = await fetch('http://localhost:2000/auth/register/owner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+  
+      if (!response.ok) throw new Error('Erro no cadastro local');
+  
       setSuccess(true);
-      
-      // Redirecionar após 2 segundos
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
-
+      setTimeout(() => navigate('/login'), 2000);
     } catch (error: any) {
-      console.error('Erro no cadastro:', error);
-      
-      // Tratamento de erros
-      if (error.code === 'auth/email-already-in-use') {
-        setErrors({ email: 'Este e-mail já está em uso' });
-      } else if (error.code === 'auth/invalid-email') {
-        setErrors({ email: 'E-mail inválido' });
-      } else if (error.code === 'auth/weak-password') {
-        setErrors({ senha: 'Senha muito fraca' });
-      } else {
-        setErrors({ geral: 'Erro ao criar conta. Tente novamente.' });
-      }
+      setErrors({ geral: error.message });
     } finally {
       setLoading(false);
     }
