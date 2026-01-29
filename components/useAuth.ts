@@ -1,77 +1,99 @@
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged, User, signOut } from 'firebase/auth';
+import { useState, useEffect, useCallback } from 'react';
 
-let auth: any = null;
+// Interface baseada nas rotas do seu UserService
+export interface User {
+  id: string | number;
+  nome: string;
+  email: string;
+  telefone?: string;
+  imagem?: string; // Base64 vindo do banco
+  role?: 'owner' | 'employee' | 'client';
+  data_nascimento?: string;
+  cpf_usuario?: string;
+}
 
-const initializeFirebase = async () => {
-  try {
-    const { auth: authInstance } = await import('../src/services/firebase');
-    auth = authInstance;
-    return auth;
-  } catch (error) {
-    console.warn('Firebase não configurado para auth state');
-    return null;
-  }
-};
+const API_URL = 'http://localhost:2000';
+const STORAGE_KEY = '@descomplicai:user';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // 1. Carregar usuário do LocalStorage ao iniciar
   useEffect(() => {
-    const initAuth = async () => {
-      const authInstance = await initializeFirebase();
-      
-      if (authInstance) {
-        const unsubscribe = onAuthStateChanged(authInstance, async (user) => {
-          if (user) {
-            try {
-              await fetch('http://127.0.0.1:3000/api/auth/sync', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  uid: user.uid,
-                  email: user.email,
-                  name: user.displayName,
-                }),
-              });
-            } catch (err) {
-              console.warn("Offline mode: Database sync skipped or backend unreachable");
-            }
-            // -----------------------------------
-            
-            setUser(user);
-          } else {
-            setUser(null);
-          }
-          setLoading(false);
-        });
-  
-        return unsubscribe;
-      } else {
-        setLoading(false);
-      }
-    };
-  
-    const unsubscribePromise = initAuth();
-  
-    return () => {
-      unsubscribePromise.then(unsubscribe => {
-        if (unsubscribe) unsubscribe();
-      });
-    };
+    const storageUser = localStorage.getItem(STORAGE_KEY);
+    if (storageUser) {
+      setUser(JSON.parse(storageUser));
+    }
+    setLoading(false);
   }, []);
 
-  const logout = async () => {
-    if (auth) {
-      try {
-        await signOut(auth);
-      } catch (error) {
-        console.error('Erro ao fazer logout:', error);
+  // 2. Função de Login (POST /auth/login)
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Erro ao realizar login');
       }
+
+      // O UserService costuma retornar { user, token } ou apenas o user
+      const userData = data.user || data; 
+      
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+      setUser(userData);
+      return userData;
+    } catch (error) {
+      console.error("Erro no login local:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-    setUser(null);
   };
 
-  return { user, loading, logout };
+  // 3. Função de Logout (POST /auth/logout/:id)
+  const logout = useCallback(async () => {
+    if (user?.id) {
+      try {
+        // Chama a rota de logout do seu backend para limpar sessão se necessário
+        await fetch(`${API_URL}/auth/logout/${user.id}`, { method: 'POST' });
+      } catch (err) {
+        console.warn("Erro ao avisar logout ao servidor, limpando localmente...");
+      }
+    }
+    localStorage.removeItem(STORAGE_KEY);
+    setUser(null);
+    window.location.href = '/login';
+  }, [user]);
+
+  // 4. Função para atualizar os dados (Sync com o Perfil.tsx)
+  const refreshUser = async () => {
+    if (!user?.id) return;
+    try {
+      const response = await fetch(`${API_URL}/users/${user.id}`);
+      const updatedUser = await response.json();
+      if (response.ok) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));
+        setUser(updatedUser);
+      }
+    } catch (err) {
+      console.error("Erro ao atualizar dados do usuário:", err);
+    }
+  };
+
+  return {
+    user,
+    loading,
+    login,
+    logout,
+    refreshUser,
+    isAuthenticated: !!user,
+  };
 };

@@ -2,24 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
 
-// Import do Firebase - vamos usar importação dinâmica para evitar erro
-let auth: any = null;
-let createUserWithEmailAndPassword: any = null;
-let updateProfile: any = null;
-
-// Função para inicializar o Firebase quando necessário
-const initializeFirebase = async () => {
-  try {
-    const { auth: authModule, createUserWithEmailAndPassword: createUser, updateProfile: updateProfileModule } = await import('firebase/auth');
-    const { auth: authInstance } = await import('../src/services/firebase');
-    auth = authInstance;
-    createUserWithEmailAndPassword = createUser;
-    updateProfile = updateProfileModule;
-  } catch (error) {
-    console.warn('Firebase não configurado. Modo de demonstração ativado.');
-  }
-};
-
 const Cadastro: React.FC = () => {
   const [formData, setFormData] = useState({
     nome: '',
@@ -103,28 +85,27 @@ const Cadastro: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    try {
-      await initializeFirebase();
   
-      if (auth && createUserWithEmailAndPassword) {
-        // 1. Create in Firebase Emulator
-        const userCredential = await createUserWithEmailAndPassword(
-          auth, formData.email, formData.senha
-        );
-        
-        await fetch('http://127.0.0.1:8080/api/sync-user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            uid: userCredential.user.uid,
-            email: formData.email,
-            nome: formData.nome,
-            cpf: formData.cpf,
-            dataNascimento: formData.dataNascimento
-          })
-        });
-      }
+    const [dia, mes, ano] = formData.dataNascimento.split('/');
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+  
+    const payload = {
+      nome: formData.nome,
+      senha: formData.senha,
+      email: formData.email,
+      data_nascimento: dataFormatada,
+      cpf_usuario: formData.cpf
+    };
+  
+    try {
+      const response = await fetch('http://localhost:2000/auth/register/owner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+  
+      if (!response.ok) throw new Error('Erro no cadastro local');
+  
       setSuccess(true);
       setTimeout(() => navigate('/login'), 2000);
     } catch (error: any) {

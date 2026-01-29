@@ -15,6 +15,6 @@ export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
 // BYPASS PROXY & WORK OFFLINE
-if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
-  connectAuthEmulator(auth, "http://127.0.0.1:9099");
-}
+// if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+//   connectAuthEmulator(auth, "http://127.0.0.1:9099");
+// }
